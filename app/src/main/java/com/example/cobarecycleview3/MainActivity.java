@@ -1,6 +1,7 @@
 package com.example.cobarecycleview3;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -20,7 +21,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter {
+
+    public static final String HOTEL = "hotal";
+    ArrayList<Hotel> mList = new ArrayList<>();
+    HotelAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -43,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-    }<Hotel>mList =new ArrayList<>()
-    HotelAdapter mAdapter;
+    }
 
     private void fillData() {
         Resources resources = getResources();
@@ -74,9 +79,27 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.notifyDataSetChanged();
     }
 
-    public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter
+//    public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter{
+//        public static final String HOTEL = "hotal";
+//        ArrayList<Hotel> mList = new ArrayList<>();
+//        HotelAdapter mAdapter;
+//
+//        @Override
+//        public void doClick(int pos){
+//            Intent intent = new Intent(this, DetailActivity.class);
+//            intent.putExtra(HOTEL, mList.get(pos));
+//            startActivity(intent);
+//        }
 
-    ArrayList
+//        @Override
+//        protected void onCreate(Bundle savedInstanceState){
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_main);
+//            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        }
+//    }
+
+//    ArrayList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,5 +121,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void doClick(int pos) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(HOTEL, mList.get(pos));
+        startActivity(intent);
     }
 }

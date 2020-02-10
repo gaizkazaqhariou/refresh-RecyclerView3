@@ -66,11 +66,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             tvJudul = itemView.findViewById(R.id.textViewJudul);
             tvDeskripsi = itemView.findViewById(R.id.textViewDeskripsi);
 
-            itemView.setOnClickListener(new View.OnClickListener()) {
-                public void onClick (View v){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     mIHotelAdapter.doClick(getAdapterPosition());
                 }
-            }
+            });
         }
     }
 }
