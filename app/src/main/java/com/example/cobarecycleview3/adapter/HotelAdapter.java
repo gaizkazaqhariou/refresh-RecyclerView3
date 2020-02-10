@@ -1,5 +1,7 @@
 package com.example.cobarecycleview3.adapter;
 
+import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +18,24 @@ import java.util.ArrayList;
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> {
 
     ArrayList<Hotel> hotelList;
+    IHotelAdapter mIHotelAdapter;
 
-    public HotelAdapter(ArrayList<Hotel> hotelList) {
+    public HotelAdapter(Context context, ArrayList<Hotel> hotelList) {
         this.hotelList = hotelList;
+        mIHotelAdapter = (IHotelAdapter) context;
     }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Hotel hotel = hotelList.get(position);
+        holder.tvJudul.setText(hotel.judul);
+        holder.tvDeskripsi.setText(hotel.deskripsi);
+        holder.ivFoto.setImageURI(Uri.parse(hotel.foto));
+    }
+
+//    public HotelAdapter(ArrayList<Hotel> hotelList) {
+//        this.hotelList = hotelList;
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,12 +44,8 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         return vh;
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Hotel hotel = hotelList.get(position);
-        holder.tvJudul.setText(hotel.judul);
-        holder.tvDeskripsi.setText(hotel.deskripsi);
-        holder.ivFoto.setImageDrawable(hotel.foto);
+    public interface IHotelAdapter {
+        void doClick(int pos);
     }
 
     @Override
@@ -53,6 +65,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             ivFoto = itemView.findViewById(R.id.imageView);
             tvJudul = itemView.findViewById(R.id.textViewJudul);
             tvDeskripsi = itemView.findViewById(R.id.textViewDeskripsi);
+
+            itemView.setOnClickListener(new View.OnClickListener()) {
+                public void onClick (View v){
+                    mIHotelAdapter.doClick(getAdapterPosition());
+                }
+            }
         }
     }
 }

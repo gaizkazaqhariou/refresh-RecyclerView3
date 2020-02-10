@@ -1,8 +1,8 @@
 package com.example.cobarecycleview3;
 
+import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +22,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Hotel> mList = new ArrayList<>();
-    HotelAdapter mAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new HotelAdapter(mList);
+        mAdapter = new HotelAdapter(this, mList);
         recyclerView.setAdapter(mAdapter);
         fillData();
 
@@ -46,16 +43,24 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-    }
+    }<Hotel>mList =new ArrayList<>()
+    HotelAdapter mAdapter;
 
     private void fillData() {
         Resources resources = getResources();
         String[] arJudul = resources.getStringArray(R.array.places);
         String[] arDeskripsi = resources.getStringArray(R.array.place_desc);
+        String[] arDetail = resources.getStringArray(R.array.place_desc);
+        String[] arLokasi = resources.getStringArray(R.array.place_locations);
         TypedArray a = resources.obtainTypedArray(R.array.places_picture);
-        Drawable[] arFoto = new Drawable[a.length()];
+        String[] arFoto = new String[a.length()];
         for (int i = 0; i < arFoto.length; i++) {
-            arFoto[i] = a.getDrawable(i);
+            int id = a.getResourceId(i, 0);
+            arFoto[i] = ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                    + resources.getResourcePackageName(id) + '/'
+                    + resources.getResourceTypeName(id) + '/'
+                    + resources.getResourceEntryName(id);
+//            arFoto[i] = a.getDrawable(i);
 //            BitmapDrawable bd = (BitmapDrawable) a.getDrawable(i);
 //            RoundedBitmapDrawable rbd = RoundedBitmapDrawableFactory.create(getResources(), bd.getBitmap());
 //            rbd.setCircular(true);
@@ -64,10 +69,14 @@ public class MainActivity extends AppCompatActivity {
         a.recycle();
 
         for (int i = 0; i < arJudul.length; i++) {
-            mList.add(new Hotel(arJudul[i], arDeskripsi[i], arFoto[i]));
+            mList.add(new Hotel(arJudul[i], arDeskripsi[i], arDetail[i], arLokasi[i], arFoto[i]));
         }
         mAdapter.notifyDataSetChanged();
     }
+
+    public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter
+
+    ArrayList
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
