@@ -1,5 +1,6 @@
 package com.example.cobarecycleview3;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.cobarecycleview3.model.Hotel;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class InputActivity extends AppCompatActivity {
 
@@ -47,5 +50,66 @@ public class InputActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void doSave() {
+        String judul = etJudul.getText().toString();
+        String deskripsi = etDeskripsi.getText().toString();
+        String detail = etDetail.getText().toString();
+        String lokasi = etLokasi.getText().toString();
+
+        if (isValid(judul, deskripsi, detail, lokasi, uriFoto)) {
+            hotel = new Hotel(judul, deskripsi, detail, lokasi, uriFoto.toString());
+
+            Intent intent = new Intent();
+            intent.putExtra(MainActivity.HOTEL, hotel);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    }
+
+    private boolean isValid(String judul, String deskripsi, String detail, String lokasi, Uri uriFoto) {
+        boolean valid = true;
+        if (judul.isEmpty()) {
+            setErrorEmpty(etJudul);
+            valid = false;
+        }
+        if (deskripsi.isEmpty()) {
+            setErrorEmpty(etDeskripsi);
+            valid = false;
+        }
+        if (detail.isEmpty()) {
+            setErrorEmpty(etDetail);
+            valid = false;
+        }
+        if (lokasi.isEmpty()) {
+            setErrorEmpty(etLokasi);
+            valid = false;
+        }
+        if (uriFoto == null) {
+            Snackbar.make(ivFoto, "Foto Belum Ada", Snackbar.LENGTH_SHORT).show();
+            valid = false;
+        }
+        return valid;
+    }
+
+    private void setErrorEmpty(EditText editText) {
+        editText.setError(((TextInputLayout) editText.getParent().getParent()).getHint() + "Belum Diisi");
+    }
+
+    private void pickPhoto() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_GET);
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_GET && resultCode == RESULT_OK) {
+            uriFoto = data.getData();
+            ivFoto.setImageURI(uriFoto);
+        }
     }
 }

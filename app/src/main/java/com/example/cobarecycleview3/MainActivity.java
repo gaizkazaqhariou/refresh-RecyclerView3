@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cobarecycleview3.adapter.HotelAdapter;
 import com.example.cobarecycleview3.model.Hotel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -26,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
     public static final String HOTEL = "hotal";
     ArrayList<Hotel> mList = new ArrayList<>();
     HotelAdapter mAdapter;
+
+    static final int REQUEST_CODE_ADD = 88;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +45,14 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                goAdd();
             }
         });
+    }
+
+    private void goAdd() {
+        startActivityForResult(new Intent(this, InputActivity.class), REQUEST_CODE_ADD);
     }
 
     private void fillData() {
@@ -128,5 +132,15 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(HOTEL, mList.get(pos));
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK) {
+            Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
+            mList.add(hotel);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
