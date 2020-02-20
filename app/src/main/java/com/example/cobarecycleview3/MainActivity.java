@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter {
 
-    public static final String HOTEL = "hotal";
+    public static final String HOTEL = "hotel";
     ArrayList<Hotel> mList = new ArrayList<>();
     HotelAdapter mAdapter;
     static final int REQUEST_CODE_EDIT = 99;

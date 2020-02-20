@@ -114,7 +114,10 @@ public class InputActivity extends AppCompatActivity {
     }
 
     private void pickPhoto() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent;
+        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, REQUEST_IMAGE_GET);
